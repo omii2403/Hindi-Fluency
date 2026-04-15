@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from collections import Counter
 
-BASE = r"C:\Users\kotad\OneDrive\Desktop\BRSM"
+# Use the script directory as project base so paths work on any machine.
+BASE = os.path.dirname(os.path.abspath(__file__))
 IMG  = os.path.join(BASE, "images")
 os.makedirs(IMG, exist_ok=True)
 
@@ -342,4 +343,4 @@ plt.tight_layout(rect=[0, 0, 1, 0.96])
 fig.savefig(os.path.join(IMG, 'demo_fig05_combined.png'), bbox_inches='tight')
 plt.close()
 print("Saved demo_fig05_combined.png")
-print("All demographic figures saved.")
+print(f"All demographic figures saved to: {IMG}")

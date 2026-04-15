@@ -1,0 +1,36 @@
+subject_id,age,gender,education,state_ut,first_language,Hi_Read,Hi_Write,hi_confidence
+10255,27.0,Male,20.0,Andhra Pradesh,Telugu,4.0,4.0,4.0
+95712,23.0,Male,17.0,Chhattisgarh,Hindi,5.0,4.0,5.0
+53105,21.0,Male,16.0,Gujarat,Gujarati,5.0,5.0,5.0
+53307,21.0,Male,16.0,Punjab,Punjabi,5.0,3.0,4.0
+92821,25.0,Male,18.0,Uttarakhand,Hindi,4.0,4.0,4.0
+73233,22.0,Male,15.0,Gujarat,Gujarati,4.0,3.0,4.0
+83682,24.0,Male,17.0,Maharashtra,Hindi,2.0,3.0,3.0
+94502,27.0,Male,19.0,Bihar,Hindi,5.0,3.0,5.0
+81851,24.0,Male,16.0,Chhattisgarh,Hindi,5.0,3.0,5.0
+83169,26.0,Male,17.0,Madhya Pradesh,English,5.0,4.0,5.0
+76112,25.0,Male,18.0,Maharashtra,English,3.0,3.0,4.0
+35389,23.0,Male,16.0,Madhya Pradesh,hindi,4.0,4.0,4.0
+68981,22.0,Female,17.0,Rajasthan,English,4.0,3.0,3.0
+61476,21.0,Male,14.0,Delhi,Hindi,4.0,3.0,5.0
+72898,22.0,Male,16.0,Madhya Pradesh,hindi,5.0,5.0,5.0
+62335,22.0,Male,16.0,Gujarat,GUjarati,4.0,4.0,4.0
+71977,23.0,Male,16.0,Maharashtra,Hindi,4.0,4.0,5.0
+23853,21.0,Female,14.0,Jharkhand,Hindi ,4.0,4.0,5.0
+86781,21.0,Male,15.0,Gujarat,Gujarati,4.0,3.0,4.0
+5157,19.0,Female,14.0,Telangana,Telugu,3.0,4.0,3.0
+10147,21.0,Male,15.0,Kerala,Hindi,5.0,5.0,5.0
+78839,21.0,Male,15.0,Gujarat,Gujarati,4.0,4.0,4.0
+74323,23.0,Male,17.0,Gujarat,Gujarti,5.0,5.0,5.0
+31417,21.0,Male,15.0,Gujarat,Gujarati,4.0,4.0,4.0
+81788,23.0,Male,16.0,Bihar,hindi,4.0,1.0,4.0
+34350,23.0,Male,17.0,Madhya Pradesh,hindi,5.0,4.0,5.0
+3342,24.0,Male,16.0,Madhya Pradesh,Hindi,5.0,2.0,5.0
+25803,25.0,Male,18.0,Uttarakhand,Hindi,4.0,2.0,4.0
+43909,23.0,Male,16.0,Maharashtra,Hindi,3.0,2.0,3.0
+13549,24.0,Male,16.0,Bihar,English,4.0,3.0,3.0
+20970,27.0,Male,18.0,Uttar Pradesh,Hindi,5.0,4.0,5.0
+49294,25.0,Male,18.0,Bihar,Hindi,5.0,4.0,5.0
+77358,22.0,Male,16.0,Madhya Pradesh,English,2.0,2.0,5.0
+13498,24.0,Male,16.0,Rajasthan,Hindi,4.0,3.0,4.0
+42616,25.0,Male,20.0,Bihar,Hindi,5.0,4.0,4.0
