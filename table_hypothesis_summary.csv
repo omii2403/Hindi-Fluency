@@ -1,7 +1,0 @@
-#,Test,Statistic,p,Effect,Decision
-RQ1,Wilcoxon signed-rank,W=147.0,= 0.040,"t=-1.66, d=0.32",Reject H0
-RQ2,Spearman correlation,rho=0.30,= 0.080,rank-based association,Not significant
-RQ4,Kruskal-Wallis on SpAM NN distance,H=24.45,< .001,lower NN distance = denser semantic neighbourhood,Domains differ
-RQ5,Spearman + MixedLM (SpAM dispersion -> switch cost),rho=-0.07,= 0.581,MixedLM beta=-1248.3,Not significant
-EH1,Kruskal-Wallis,H=8.41,= 0.038,eta2~0.05,Domains differ
-RQ3,Spearman rho (BH-corrected),best rho=0.08,= 0.675,max |rho|=0.11,Not significant
