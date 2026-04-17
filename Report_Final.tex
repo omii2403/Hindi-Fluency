@@ -1,9 +1,8 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{setspace}
+\documentclass[conference]{IEEEtran}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{array}
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
 
@@ -14,7 +13,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This paper studies how Hindi speakers retrieve words from memory. We analyze two tasks: Verbal Fluency Task (VFT) and Spatial Arrangement Method (SpAM). The dataset has 35 participants and 1040 responses. For primary statistical tests, we use only Hindi/Hinglish responses ($n=723$), and we keep English responses only for comparison context. We test domain-wise differences with Kruskal--Wallis tests and association patterns with Spearman correlation. For cluster comparison, we use Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) between participant SpAM clusters and embedding-based semantic and phonetic clusters. Domain-level tests are mostly not statistically significant, but descriptive patterns are stable across tasks. We also build an equal-weight composite fluency score that combines VFT and SpAM features. The findings suggest that lexical search is structured, but the strength of structure is heterogeneous across participants and domains.
+This paper studies how Hindi speakers retrieve words from memory. We analyze two tasks: Verbal Fluency Task (VFT) and Spatial Arrangement Method (SpAM). The dataset has 35 participants and 1040 responses. For primary statistical tests, we use only Hindi/Hinglish responses ($n=723$), and we keep English responses only for comparison context. We test domain-wise differences with Kruskal--Wallis tests, association patterns with Spearman correlation, and VFT sequence dynamics using within-cluster versus cluster-switch transitions. For cluster comparison, we use Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) between participant SpAM clusters and embedding-based semantic and phonetic clusters. Domain-level tests are mostly not statistically significant, but descriptive patterns are stable across tasks. We also build an equal-weight composite fluency score that combines VFT and SpAM features. The findings suggest that lexical search is structured, but the strength of structure is heterogeneous across participants and domains.
 \end{abstract}
 
 \section{Introduction}
@@ -25,21 +24,14 @@ Verbal fluency performance is often used to understand memory search and lexical
 In this study, we combine VFT and SpAM. The motivation is simple: VFT gives retrieval dynamics (how many words, how fast), while SpAM gives organization dynamics (how words are grouped in space). Together, these two tasks can provide a richer view of lexical search.
 
 \subsection{Research Questions}
-To answer the main question in a structured way, we use five focused research questions.
+To avoid repetition, the focused research questions are presented once in Table~\ref{tab:rq_simple}.
 
-\begin{itemize}
-  \item \textbf{RQ1:} Do VFT productivity and retrieval speed differ across semantic domains?
-  \item \textbf{RQ2:} Which participant-level variables are associated with VFT outcomes?
-  \item \textbf{RQ3:} Does SpAM spatial compactness differ across domains?
-  \item \textbf{RQ4:} How strongly do participant SpAM clusters align with semantic and phonetic embedding-based clusters?
-  \item \textbf{RQ5:} Does a combined VFT+SpAM fluency score improve inference compared to VFT-only scoring?
-\end{itemize}
-
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{Research questions and simple meaning}
 \label{tab:rq_simple}
-\begin{tabular}{p{1cm} p{8cm} p{5.5cm}}
+\footnotesize
+\begin{tabular}{p{0.08\textwidth} p{0.52\textwidth} p{0.31\textwidth}}
 \toprule
 RQ & Formal research question & Simple meaning \\
 \midrule
@@ -50,7 +42,20 @@ RQ4 & How strongly do participant SpAM clusters align with semantic and phonetic
 RQ5 & Does a combined VFT+SpAM fluency score improve inference compared to VFT-only scoring? & Is combined scoring more informative than VFT-only scoring? \\
 \bottomrule
 \end{tabular}
-\end{table}
+\normalsize
+\end{table*}
+
+\subsection{Hypotheses}
+We explicitly define null and alternative hypotheses for confirmatory analyses.
+
+\begin{itemize}
+  \item \textbf{H0$_1$:} Domain distributions of VFT word count are equal. \textbf{H1$_1$:} At least one domain differs.
+  \item \textbf{H0$_2$:} Domain distributions of VFT mean retrieval time are equal. \textbf{H1$_2$:} At least one domain differs.
+  \item \textbf{H0$_3$:} Domain distributions of SpAM compactness (mean nearest-neighbor distance) are equal. \textbf{H1$_3$:} At least one domain differs.
+  \item \textbf{H0$_4$:} Positive ARI alignment occurs with probability $0.5$ (no directional tendency). \textbf{H1$_4$:} Positive ARI alignment occurs with probability $> 0.5$.
+  \item \textbf{H0$_5$:} Domain distributions of VFT cluster-switch rate are equal. \textbf{H1$_5$:} At least one domain differs.
+  \item \textbf{H0$_6$:} There is no monotonic association between VFT total output and Hindi confidence. \textbf{H1$_6$:} A monotonic association exists.
+\end{itemize}
 
 \section{Data and Task Design}
 \subsection{Participants and Responses}
@@ -68,6 +73,7 @@ Primary statistical analyses use only Hindi/Hinglish rows. English rows are not 
 For each participant-domain unit, we computed:
 \begin{itemize}
     \item \textbf{VFT features:} word count, lexical diversity, mean retrieval time.
+  \item \textbf{VFT transition features:} within-cluster transitions and cluster-switch transitions over consecutive produced words.
     \item \textbf{SpAM features:} mean nearest-neighbor distance in $x,y$ space, participant cluster labels from hierarchical clustering, and agreement with semantic/phonetic cluster labels.
 \end{itemize}
 
@@ -107,22 +113,25 @@ To stay aligned with BRSM methods and avoid assumption mismatch, test selection 
   \item For directional tendency of positive ARI values, we used a binomial sign test.
 \end{itemize}
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{Normality-first test decision framework used in this study}
 \label{tab:test_decisions}
-\begin{tabular}{p{5cm} p{4.5cm} p{5.5cm}}
+\footnotesize
+\begin{tabular}{p{0.30\textwidth} p{0.23\textwidth} p{0.35\textwidth}}
 \toprule
 Analysis target & Decision rule & Test used in final analysis \\
 \midrule
 Domain-wise VFT word count & At least one domain failed Shapiro--Wilk & Kruskal--Wallis \\
 Domain-wise VFT mean RT & At least one domain failed Shapiro--Wilk & Kruskal--Wallis \\
+Domain-wise VFT cluster-switch rate & At least one domain failed Shapiro--Wilk & Kruskal--Wallis \\
 Domain-wise SpAM compactness (mean NN distance) & At least one domain failed Shapiro--Wilk & Kruskal--Wallis \\
 Participant-level outcome associations & Non-normality and monotonic relation target & Spearman correlation \\
 ARI directional tendency & Sign direction over paired outcomes & Binomial sign test \\
 \bottomrule
 \end{tabular}
-\end{table}
+\normalsize
+\end{table*}
 
 \subsection{Composite Fluency Score}
 We define a participant-domain score using standardized components:
@@ -139,13 +148,14 @@ with $D$ equal to number of available domains for that participant.
 \subsection{Descriptive Patterns}
 Table~\ref{tab:domain_summary} reports domain-level descriptive values for Hindi/Hinglish rows.
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{Domain-level summary (Hindi/Hinglish subset)}
 \label{tab:domain_summary}
+\footnotesize
 \begin{tabular}{lrrrr}
 \toprule
-Domain & Session-domain N & Mean word count & Mean RT (ms) & Mean lexical diversity \\
+Domain & Sess.-dom N & Mean words & Mean RT (ms) & Mean lex. div. \\
 \midrule
 colours & 4  & 10.25 & 5392.52 & 0.914 \\
 animals & 28 & 8.321 & 7196.57 & 0.996 \\
@@ -153,11 +163,12 @@ body-parts & 23 & 8.304 & 7384.59 & 0.995 \\
 foods & 35 & 7.371 & 6978.33 & 1.000 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\normalsize
+\end{table*}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{images/vft_wordcount_by_domain.png}
+\includegraphics[width=\linewidth]{images/vft_wordcount_by_domain.png}
 \caption{VFT word count by domain (Hindi/Hinglish subset).}
 \label{fig:vft_count}
 \end{figure}
@@ -175,16 +186,16 @@ Based on the normality-first rule, Shapiro--Wilk indicated at least one non-norm
     \item Mean RT by domain: $H=1.919$, $p=0.5894$ (not significant).
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{images/vft_rt_by_domain.png}
+\includegraphics[width=\linewidth]{images/vft_rt_by_domain.png}
 \caption{Mean retrieval time by domain (Hindi/Hinglish subset).}
 \label{fig:vft_rt}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{images/vft_words_vs_rt.png}
+\includegraphics[width=\linewidth]{images/vft_words_vs_rt.png}
 \caption{Relation between VFT output size and retrieval speed.}
 \label{fig:vft_scatter}
 \end{figure}
@@ -192,22 +203,43 @@ Based on the normality-first rule, Shapiro--Wilk indicated at least one non-norm
 \textbf{Inference.}
 For RQ1, we do not reject the null hypothesis at $\alpha=0.05$. Domain differences are present descriptively, but inferential evidence is not strong in this sample.
 
-\subsection{SpAM Domain Test}
-\textbf{Question addressed (RQ3):} Does SpAM spatial compactness differ across domains?
+\subsection{VFT Transition Dynamics (Within-Cluster vs Cluster-Switch)}
+This subsection addresses the missing process-level part of VFT analysis by examining how participants moved through clusters over time.
 
-Shapiro--Wilk diagnostics indicated at least one non-normal domain distribution for compactness, so Kruskal--Wallis was used.
+For each participant-domain sequence, words were ordered by production position. Using participant SpAM-derived clusters in that domain, each adjacent word pair $(w_t, w_{t+1})$ was labeled as:
+\begin{itemize}
+  \item \textbf{within-cluster transition} if both words had the same cluster label,
+  \item \textbf{cluster-switch transition} if labels differed.
+\end{itemize}
 
-Mean nearest-neighbor distance by domain gave $H=3.038$, $p=0.3857$ (not significant).
-
-\begin{figure}[H]
+\begin{table*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{images/spam_compactness_by_domain.png}
-\caption{SpAM compactness (mean nearest-neighbor distance) by domain.}
-\label{fig:spam_compactness}
-\end{figure}
+\caption{VFT transition summary by domain}
+\label{tab:vft_transition_summary}
+\scriptsize
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Domain & N & Mean words & Mean within & Mean switch & Within rate & Switch rate \\
+\midrule
+colours & 4  & 10.250 & 4.500 & 4.750 & 0.456 & 0.544 \\
+animals & 27 & 8.556  & 4.037 & 3.519 & 0.532 & 0.468 \\
+foods & 31 & 8.032 & 3.871 & 3.161 & 0.537 & 0.463 \\
+body-parts & 23 & 8.304 & 4.391 & 2.913 & 0.591 & 0.409 \\
+\bottomrule
+\end{tabular}
+\normalsize
+\end{table*}
+
+Domain differences in switch-rate were tested with Kruskal--Wallis (normality-first rule): $H=1.909$, $p=0.5916$.
+
+Exploratory session-level associations were also weak and non-significant:
+\begin{itemize}
+  \item total words vs switch-rate: $\rho=-0.043$, $p=0.8147$;
+  \item Hindi confidence vs switch-rate: $\rho=0.180$, $p=0.3230$.
+\end{itemize}
 
 \textbf{Inference.}
-For RQ3, domain-wise compactness differences are not statistically significant, so we treat them as descriptive only.
+Within-cluster and cluster-switch transitions are now explicitly quantified, but in this sample they do not show strong domain effects or strong association with confidence. Thus, transition behavior should be interpreted as descriptive support for strategy heterogeneity, not as a confirmed group-level effect.
 
 \subsection{Associations With Background Variables}
 \textbf{Question addressed (RQ2):} Which participant-level variables are associated with VFT outcomes?
@@ -219,20 +251,41 @@ At session level, significant Spearman results include:
     \item Total words vs Hindi confidence: $\rho=-0.395$, $p=0.019$.
 \end{itemize}
 
-This negative correlation suggests that in this sample, larger total output is associated with lower self-reported confidence. This does not imply causality.
+\textbf{Interpretation.}
+This indicates a moderate negative monotonic relationship: participants with higher total VFT output tended to report lower Hindi confidence in this sample.
+
+The direction is counter-intuitive and should not be over-interpreted. A plausible explanation is measurement mismatch: confidence is self-reported and can reflect perceived ability rather than objective lexical performance. More fluent participants may under-rate themselves, while less fluent participants may over-rate themselves. Another possibility is strategy variation: some lower-confidence participants may produce more words through risk-taking, whereas highly confident participants may answer more cautiously. Finally, the modest sample size ($n=35$) increases sensitivity to outliers and sampling variation.
 
 \textbf{Inference.}
-For RQ2, there is evidence of monotonic association with selected participant variables, but direction should be interpreted carefully because confidence is self-reported and the sample is modest.
+For RQ2, there is evidence of a statistically significant participant-level association, but the negative direction is not theoretically straightforward and is likely influenced by self-report bias, strategy differences, and sample-size limitations.
+
+\subsection{SpAM Domain Test}
+\textbf{Question addressed (RQ3):} Does SpAM spatial compactness differ across domains?
+
+Shapiro--Wilk diagnostics indicated at least one non-normal domain distribution for compactness, so Kruskal--Wallis was used.
+
+Mean nearest-neighbor distance by domain gave $H=3.038$, $p=0.3857$ (not significant).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{images/spam_compactness_by_domain.png}
+\caption{SpAM compactness (mean nearest-neighbor distance) by domain.}
+\label{fig:spam_compactness}
+\end{figure}
+
+\textbf{Inference.}
+For RQ3, domain-wise compactness differences are not statistically significant, so we treat them as descriptive only.
 
 \subsection{Cluster Similarity Metrics}
 \textbf{Question addressed (RQ4):} How strongly do participant SpAM clusters align with semantic and phonetic embedding-based clusters?
 
 Table~\ref{tab:cluster_summary} shows domain-wise mean agreement values.
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{Domain-wise mean cluster similarity metrics}
 \label{tab:cluster_summary}
+\footnotesize
 \begin{tabular}{lrrrrr}
 \toprule
 Domain & ARI(sem,SpAM) & ARI(pho,SpAM) & NMI(sem,SpAM) & NMI(pho,SpAM) & Mean NN distance \\
@@ -243,7 +296,8 @@ colours & 0.157 & 0.175 & 0.301 & 0.319 & 0.115 \\
 animals & 0.095 & 0.064 & 0.394 & 0.384 & 0.111 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\normalsize
+\end{table*}
 
 Global means were: ARI(sem,SpAM)=0.154, ARI(pho,SpAM)=0.111, NMI(sem,SpAM)=0.405, NMI(pho,SpAM)=0.364.
 
@@ -253,26 +307,26 @@ Sign tests for positive ARI tendency were significant:
   \item phonetic-SpAM ARI: 48/79 positive, $p=0.0356$.
 \end{itemize}
 
-  \begin{figure}[H]
+  \begin{figure}[t]
   \centering
-  \includegraphics[width=0.78\textwidth]{images/spam_alignment_by_domain.png}
+  \includegraphics[width=\linewidth]{images/spam_alignment_by_domain.png}
   \caption{Domain-wise ARI alignment between participant SpAM clusters and embedding-based clusters.}
   \label{fig:spam_ari}
   \end{figure}
 
-  \begin{figure}[H]
+  \begin{figure}[t]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/cluster_similarity_matrix.png}
+  \includegraphics[width=\linewidth]{images/cluster_similarity_matrix.png}
   \caption{Average ARI and NMI values for semantic and phonetic cluster comparisons.}
   \label{fig:sim_matrix}
   \end{figure}
 
-  \begin{figure}[H]
+  \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.92\textwidth]{images/sample_spam_semantic_phonetic_clusters.png}
+  \includegraphics[width=0.94\textwidth]{images/sample_spam_semantic_phonetic_clusters.png}
   \caption{Example participant-domain case: SpAM clusters versus semantic and phonetic cluster assignments.}
   \label{fig:cluster_example}
-  \end{figure}
+  \end{figure*}
 
   \textbf{Inference.}
   For RQ4, sign tests and NMI both support non-trivial positive alignment with semantic and phonetic representations, with stronger average overlap in the semantic channel.
@@ -288,16 +342,16 @@ For comparison with self-reported Hindi confidence:
   \item Integrated score: $\rho=-0.317$, $p=0.0633$.
 \end{itemize}
 
-  \begin{figure}[H]
+  \begin{figure}[t]
   \centering
-  \includegraphics[width=0.78\textwidth]{images/vft_vs_integrated_score.png}
+  \includegraphics[width=\linewidth]{images/vft_vs_integrated_score.png}
   \caption{VFT-only score versus integrated (VFT+SpAM) composite score.}
   \label{fig:vft_integrated}
   \end{figure}
 
-  \begin{figure}[H]
+  \begin{figure}[t]
   \centering
-  \includegraphics[width=0.78\textwidth]{images/composite_score_distribution.png}
+  \includegraphics[width=\linewidth]{images/composite_score_distribution.png}
   \caption{Distribution of integrated composite Hindi fluency score.}
   \label{fig:comp_dist}
   \end{figure}
@@ -308,31 +362,38 @@ For comparison with self-reported Hindi confidence:
   \subsection{Question-wise Summary}
   Table~\ref{tab:rq_summary} provides direct mapping from each question to statistical outcome and inference.
 
-  \begin{table}[H]
+  \begin{table*}[t]
   \centering
   \caption{Research question, result, and inference summary}
   \label{tab:rq_summary}
-  \begin{tabular}{p{0.9cm} p{6.2cm} p{3.5cm} p{4.3cm}}
+  \scriptsize
+  \begin{tabular}{@{}p{0.07\textwidth} p{0.30\textwidth} p{0.25\textwidth} p{0.30\textwidth}@{}}
   \toprule
   RQ & Question & Main result & Inference \\
   \midrule
-  RQ1 & Domain difference in VFT output/speed & Word count: $p=0.1515$; RT: $p=0.5894$ & No significant domain effect \\
-  RQ2 & Participant variables and VFT outcomes & $\rho_{\text{words,conf}}=-0.395$ ($p=0.019$) & Significant monotonic association present \\
-  RQ3 & Domain difference in SpAM compactness & Kruskal--Wallis $p=0.3857$ & No significant domain effect \\
-  RQ4 & SpAM alignment with semantic/phonetic clusters & ARI sign tests significant; NMI around 0.36--0.41 & Positive directional evidence with moderate structural overlap \\
-  RQ5 & Integrated score vs VFT-only score & $|\rho_{\text{integrated,conf}}| < |\rho_{\text{VFT,conf}}|$ and $p_{\text{integrated}}>0.05$ & Integrated score richer structurally, not stronger for this proxy \\
+  RQ1 & VFT output/speed by domain & Word count: $p=0.1515$; RT: $p=0.5894$ & No significant domain effect \\
+  RQ2 & Participant factors vs VFT outcomes & $\rho_{\text{words,conf}}=-0.395$ ($p=0.019$) & Significant association; direction needs caution \\
+  RQ3 & SpAM compactness by domain & Kruskal--Wallis $p=0.3857$ & No significant domain effect \\
+  RQ4 & SpAM alignment with semantic/phonetic clusters & ARI sign tests significant; NMI $\approx 0.36$--$0.41$ & Positive directional evidence; moderate overlap \\
+  RQ5 & Integrated score vs VFT-only score & $|\rho_{\text{integrated,conf}}| < |\rho_{\text{VFT,conf}}|$, $p_{\text{integrated}}>0.05$ & Structurally richer, not stronger for confidence proxy \\
+  S1 & VFT transition dynamics (supplementary) & Switch-rate Kruskal--Wallis: $H=1.909$, $p=0.5916$ & Measurable transitions; effects remain descriptive \\
   \bottomrule
   \end{tabular}
-  \end{table}
+  \normalsize
+  \end{table*}
 
 \section{Discussion}
 The results suggest a structured lexical search process, but with mixed statistical strength across analyses.
 
 First, domain-wise inferential tests are mostly non-significant. This means we should avoid strong claims about stable domain differences for this sample size.
 
-Second, SpAM and embedding clusters show moderate information overlap (NMI), and sign tests indicate positive ARI tendency in both semantic and phonetic channels. This indicates systematic structure linkage, but also leaves room for participant-specific strategies not captured by one global clustering rule.
+Second, transition-level VFT analysis shows measurable within-cluster and switch behavior, but no strong domain-level switch-rate effect. This is still informative: lexical search strategy appears heterogeneous across individuals, even when group-level contrasts are weak.
 
-Third, adding SpAM features gives a broader fluency profile, even though it did not increase correlation with confidence in this dataset. In simple words, integrated scoring gives richer structure, but not necessarily stronger external association for every target variable.
+Third, the significant negative association between output size and self-reported confidence should be interpreted cautiously. It likely reflects a gap between perceived and actual performance, together with strategy differences and sampling variability.
+
+Fourth, SpAM and embedding clusters show moderate information overlap (NMI), and sign tests indicate positive ARI tendency in both semantic and phonetic channels. This indicates systematic structure linkage, but also leaves room for participant-specific strategies not captured by one global clustering rule.
+
+Finally, adding SpAM features gives a broader fluency profile, even though it did not increase correlation with confidence in this dataset. In simple words, integrated scoring gives richer structure, but not necessarily stronger external association for every target variable.
 
 \section{Conclusion}
 This study combines VFT and SpAM to answer how Hindi speakers search their mental lexicons. The evidence supports a structured search process with participant-level heterogeneity. We find descriptive domain patterns, moderate semantic/phonetic-spatial overlap, and meaningful but mixed cross-task coupling. So, lexical search appears organized, but the organization is not uniform across all participants and all domains.
