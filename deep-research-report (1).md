@@ -1,6 +1,8 @@
 # Analysis of Hindi Verbal Fluency Study
 
-**Executive Summary:** We reviewed an IPython notebook analyzing a Hindi verbal fluency experiment with 35 bilingual participants. The study involved two tasks: a 60‑second word-generation task (VFT) across four semantic categories (animals, foods, colours, body-parts) and a spatial-arrangement task (SpAM) where participants placed their words by similarity in 2D. The notebook posed seven research questions (RQ1–RQ7) about domain differences, participant factors, spatial organization, and phonological effects. We reconstruct the analysis steps, clarify each statistical test, report all results, and interpret them in simple terms. Key findings include: **no significant domain differences** in word count or retrieval speed (RQ1); **no support** for the hypothesis that higher self-rated Hindi confidence predicts better fluency (RQ2); **no clear differences** in spatial compactness by domain (RQ3) but modest above-chance alignment of participant spatial clusters with semantic (but not phonetic) models (RQ4); **no advantage** of a combined VFT+SpAM score over VFT alone in correlating with confidence (RQ5); and **no phonological facilitation effect** (RQ6–RQ7) in this sample. We document each analysis phase, data processing step, and visualization, and point out assumptions and limitations. Tables summarize test assumptions, results, and conclusions.  
+**Executive Summary:** We reviewed an IPython notebook analyzing a Hindi verbal fluency experiment with 35 bilingual participants. The study involved two tasks: a 60-second word-generation task (VFT) across four semantic categories (animals, foods, colours, body-parts) and a spatial-arrangement task (SpAM) where participants placed their words by similarity in 2D. The notebook posed seven research questions (RQ1-RQ7) about domain differences, participant factors, spatial organization, and phonological effects. We reconstruct the analysis steps, clarify each statistical test, report all results, and interpret them in simple terms. Key findings include: **no significant domain differences** in word count or retrieval speed (RQ1); **no support** for the hypothesis that higher self-rated Hindi confidence predicts better fluency (RQ2); **no clear differences** in spatial compactness by domain (RQ3); **mixed semantic alignment evidence** in RQ4 (sign-test positivity but permutation-based non-significance), with phonetic alignment not supported; **no reliable improvement** from composite scoring over VFT-only (RQ5); and **no phonological facilitation effect** (RQ6-RQ7) in this sample.  
+
+**Update note (MuRIL rerun):** The notebook was re-run after switching embeddings to `google/muril-base-cased` and keeping Devanagari words in native script (no Devanagari-to-Latin conversion). The observations below reflect this rerun.
 
 ## Study Context and Data
 
@@ -137,7 +139,7 @@ Hypotheses summarized (from plan):
 - **H9:** ARI of SpAM clusters vs semantic model exceeds chance. *H₀:* ARI = 0 (null level). *H₁:* ARI > 0. Tested via a sign test on domain-level ARIs and permutation.  
 - **H10:** ARI of SpAM vs phonetic model > chance. Tested similarly.
 
-- **Data:** They merged all (x,y) coordinates of Hindi words by participant and category (85 valid participant-category records). Used a sentence-transformer embedding for “semantic model” and a phonological embedding. Then applied clustering (UMAP+KMeans/HDBSCAN) to words by meaning and by phonetic form.
+- **Data:** They merged all (x,y) coordinates of Hindi words by participant and category (85+ valid participant-category records depending on filtering stage). In the rerun, the semantic model used **MuRIL** (`google/muril-base-cased`) and retained native Devanagari text. A phonological representation was also tested. Clustering (KMeans/Agglomerative/HDBSCAN) and ARI-based alignment were then compared against participant SpAM structure.
 
 - **H8 – Compactness (Cell 25):**  
   - **Descriptives:** Mean nearest-neighbor (NN) distances: animals 0.0578, foods 0.0596, colours 0.0643, body-parts 0.0794 (lower = tighter clusters). (n_records equals n_subjects because 1 record per participant-domain.)  
@@ -145,24 +147,25 @@ Hypotheses summarized (from plan):
   - **Conclusion:** No significant domain effect on SpAM compactness. Body-parts appear descriptively tightest and colours loosest, but not beyond chance.
 
 - **H9 – Semantic alignment:**  
-  - The ARI (Adjusted Rand Index) measures how similarly the participant’s own clustering aligns with a global semantic clustering of the words. The notebook reports: *“Positive records: 49/85, sign-test p=0.0004. Mean ARI ≈ 0.0486.”* 49 out of 85 participant-categories had ARI > 0, and a binomial sign test on >0 vs ≤0 yields p=0.0004, well below 0.05.  
-  - **Interpretation:** Significantly more than half of the observed ARIs are above zero, suggesting *some alignment above chance* between participant groupings and the semantic embedding clusters. However, the mean ARI is only ~0.05 (small in absolute terms), reflecting modest overlap. Per-domain ARIs (not fully listed) show semantic ARI highest for foods (0.141) and lowest for colours (−0.106) (colours again tiny n). Body-parts had ARI ~0.233 (most alignment).  
-  - **Decision:** The notebook code labeled H9 as *supported* by the sign test (though the summary text confusingly first says not, it ends “H9 supported (49/85 positives)” in one place). We interpret *H9 Supported* by the planned criterion: semantic alignment is modest but above chance.
+  - In the rerun Module-D output: **68/86** participant-category units had semantic ARI > 0, mean ARI = **0.1765**, sign-test p = **0.0000**, but permutation p = **0.5022**.  
+  - In the extended permutation analysis (Phase 9 deep-dive): **17/44** positive ARIs, sign-test p = **0.9519**, mean observed ARI = **-0.0062**, mean null ARI = **0.0007**, and 0/44 units significant by permutation.  
+  - **Interpretation:** Evidence is **mixed** and not robust under permutation-based inference. The sign-test-only signal is not corroborated by permutation tests.
+  - **Decision:** Treat H9 as **weak/inconclusive** rather than robustly supported.
 
 - **H10 – Phonetic alignment:**  
-  - 41/85 participant-categories had ARI > 0 with the phonetic clusters. Sign test p = 0.8072 (not significant). Mean ARI = 0.0118 (almost zero).  
-  - **Conclusion:** No evidence of above-chance alignment with phonetic clustering. H10 *not supported*.
+  - In rerun Module-D output: **52/86** participant-category units had ARI > 0, mean ARI = **0.0745**, sign-test p = **0.0662**, permutation p = **0.5034**.  
+  - **Conclusion:** No reliable above-chance phonetic alignment. H10 remains **not supported**.
 
 - **Graphs:** Graph D2 shows boxplots of ARIs by domain and a bar of means. Semantic ARIs are generally higher than phonetic, but all are low (<0.3). 
 
 - **Interpretation (RQ3–RQ4):**  
   - **SpAM Compactness (RQ3/H8):** No statistical domain differences. We cannot conclude some categories had tighter spatial maps than others.  
-  - **SpAM-Semantic Alignment (RQ4/H9):** There is a small but statistically significant trend that spatial layouts reflect semantic relations slightly better than random (many positive ARIs). In plain terms, participants’ groups of words on the screen tend to overlap with meaning-based clusters more than expected by chance【5†L162-L166】. The effect is weak, though.  
+  - **SpAM-Semantic Alignment (RQ4/H9):** The rerun does not show stable above-chance alignment once permutation-based criteria are enforced. In plain terms: there may be weak positive overlap in some summaries, but it is **not robust** under stronger null testing.  
   - **SpAM-Phonetic Alignment (H10):** No evidence that sound similarity drives spatial grouping beyond chance.
 
 - **Assumptions:** Kruskal–Wallis and sign tests have minimal assumptions (independence, ordinal data)【5†L162-L166】. Here sample sizes for ARI analyses are moderate (85 records). The sign test is non-parametric and appropriate for testing above-chance ARI.
 
-- **Conclusions:** *H8 not supported.* *H9 supported.* *H10 not supported.* That is, spatial semantics align a bit with meaning but not with phonology.
+- **Conclusions:** *H8 not supported.* *H9 inconclusive/weak.* *H10 not supported.*
 
 ## Phase 12: Phonological Similarity (RQ6–RQ7, H11–H12)
 
@@ -172,7 +175,12 @@ Hypotheses summarized (from plan):
 
 - **Procedure:** For each pair of consecutive responses, they measured phonological similarity (1 – [Levenshtein distance]/max_length) and semantic similarity (cosine of embeddings). Then they fit a mixed-effects model of (phonological – semantic) similarity vs position. For H12 they correlated mean phon_similarity with total_words.
 
-- **Results (Cell 113 snippet):** The code prints: “No reliable increase in phonological-over-semantic trend… Figure with 2 axes… ‘H12 interpretation: not supported’.” This implies: the interaction test (position vs phon/semantic similarity) was not significant, and the Spearman ρ between mean phon_similarity and total words was not significant (p≈0.0586 two-tailed, one-tailed ~0.0293, but apparently not meeting pre-registered alpha after correction or one-tailed?). They label H12 as not supported.
+- **Results (rerun):**  
+  - H11 interaction (type × position): beta = **+0.003127**, p = **0.0905** (not significant).  
+  - Phonological slope: beta = **+0.000077**, p = **0.9699**.  
+  - Semantic slope: beta = **-0.000141**, p = **0.0002**.  
+  - H12 Spearman (mean phonological similarity vs total words): rho = **+0.114**, one-tailed p = **0.2570**.  
+  - Both H11 and H12 are marked **not supported**.
 
 - **Interpretation:** The analysis found *no strong evidence* that participants increasingly use sound patterns in later responses, nor that those with more phonological overlap produced more words. Essentially, RQ6 and RQ7 are not supported in this dataset. In simple terms: *no clear phonological priming effect was detected*. (Given the complexity, we trust the notebook: p=0.4689 for the test of Rho differences also suggests no effect in H12.)
 
@@ -184,18 +192,18 @@ Hypotheses summarized (from plan):
 
 - **Procedure:** They compute Spearman ρ(confidence, VFT-only score) and ρ(confidence, integrated score), then use **Steiger’s Z-test** for comparing two dependent correlations (same confidence variable)【3†L174-L176】.
 
-- **Results (Cells 116 & 118):**  
-  - VFT-only vs confidence: ρ = **–0.461**, p = 0.0053 (moderate negative, significant).  
-  - Integrated vs confidence: ρ = **–0.323**, p = 0.0586 (moderate negative, *not* significant at α=0.05).  
-  - Steiger test for difference: z = 0.724, p = **0.4689** (non-significant). 
+- **Results (rerun Cells 118):**  
+  - VFT-only vs confidence: rho = **-0.461**, p = **0.0053**.  
+  - Integrated vs confidence: rho = **-0.461**, p = **0.0053**.  
+  - Steiger test for difference: z = **0.000**, p = **1.0000** (non-significant). 
 
-  The markdown table in cell 118 summarizes this: VFT-only has a significant correlation; integrated does not; the difference is non-significant.
+  In the rerun, both scores have identical correlation magnitude and significance; there is no measurable difference between them.
 
-- **Interpretation:** Surprisingly, higher confidence correlates with *fewer* words (negative ρ). This odd result mirrors earlier findings (maybe coding was reversed?). The key is the strength of association: VFT-only score had a stronger (and significant) link to confidence than the combined score did. However, statistically, the difference between –0.461 and –0.323 is not significant (p=0.4689). 
+- **Interpretation:** Higher confidence again correlates negatively with performance score (rho < 0). However, after rerun, integrated and VFT-only scores perform identically against confidence (same rho and p), and Steiger confirms no difference.
 
-  In plain terms: *adding SpAM/spatial factors to the fluency score did not improve its relation to confidence* – if anything, the classic VFT components showed the better correlation. Because the Steiger test is non-significant, we cannot claim the integrated score has a meaningfully different (or better) external validity.
+  In plain terms: *adding SpAM/spatial factors did not change the confidence correlation at all in this rerun*.
 
-- **Conclusion (H13):** *Not supported.* The integrated score is descriptively less related to confidence than VFT-only, and this difference is not statistically reliable【5†L162-L166】. Thus RQ5 is answered negatively: *Combined scoring did not notably improve prediction of fluency-related outcomes over standard VFT scoring*.
+- **Conclusion (H13):** *Not supported.* No statistically reliable difference between integrated and VFT-only score correlations (p = 1.0000).
 
 ## Summary of Findings and Recommendations
 
@@ -204,9 +212,9 @@ Hypotheses summarized (from plan):
 - **RQ2 (participant variables):** Self-rated Hindi confidence did **not** positively predict fluency. H5–H7 all failed (observed trends were opposite). Likely cause: restricted range on confidence. *Thus, personal confidence was not a useful predictor* here.
 
 - **RQ3 (SpAM compactness):** No reliable domain effect. H8 not supported. Descriptively, “body-parts” words were more tightly clustered, but p>0.05.  
-- **RQ4 (SpAM alignment):** Semantic alignment (H9) was *weakly* supported (above-chance ARI), phonetic (H10) was not. In plain terms, participants’ spatial layouts modestly reflected semantic structure, but not phonological.
+- **RQ4 (SpAM alignment):** With MuRIL rerun and stricter permutation interpretation, semantic alignment is **mixed/inconclusive** (not robust above chance), and phonetic alignment (H10) remains unsupported.
 
-- **RQ5 (composite score):** Integrated VFT+SpAM score did not outperform VFT alone in correlating with an external criterion (confidence). H13 not supported. Therefore, the classic VFT measures remain the clearer signal.
+- **RQ5 (composite score):** Integrated VFT+SpAM score did not outperform VFT alone; in rerun they are numerically identical against confidence (rho = -0.461 for both). H13 not supported.
 
 - **RQ6/H11 & RQ7/H12 (phonology):** No evidence found for phonological facilitation. Neither increasing sound-similarity over sequence nor its relation to productivity was significant.
 
