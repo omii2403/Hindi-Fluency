@@ -1,236 +1,193 @@
-\documentclass[conference]{IEEEtran}
-
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{array}
-\usepackage{amsmath}
-\usepackage{url}
 \usepackage{hyperref}
-\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[numbers]{natbib}
 
-\graphicspath{{images/img/}}
+\linespread{1.0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\graphicspath{{images/}{images/img/}}
 
-\hypersetup{
-  colorlinks=true,
-  linkcolor=blue,
-  citecolor=blue,
-  urlcolor=blue
-}
+\title{Hindi Verbal Fluency: VFT and SpAM Analysis of Mental Lexicon Structure}
+\author{Akshat Kotadia (2025201005) \and Om Mehra (2025201008) \and Ankit Chavda (2025201045)}
+\date{BRSM 2026}
 
 \begin{document}
-
-\title{Hindi Fluency Analysis in VFT and SpAM: An IEEE-Style Report}
-
-\author{\IEEEauthorblockN{Student Project Draft}
-\IEEEauthorblockA{BRSM course project}}
-
 \maketitle
 
-\begin{abstract}
-This report studies Hindi/Hinglish verbal fluency data with a mix of descriptive statistics, mixed-effects models, nonparametric tests, semantic clustering, and SpAM-based alignment checks. The data cover four domains: animals, foods, colours, and body-parts. The main pattern is clear: response times are right-skewed, within-cluster retrieval is much faster than between-cluster retrieval, and semantic structure is stronger than phonological structure in several parts of the analysis. At the same time, some expected effects are weak or not stable, so the final picture is mixed, not perfect.
-\end{abstract}
-
-\begin{IEEEkeywords}
-verbal fluency, Hindi, Hinglish, SpAM, clustering, reaction time, semantic similarity, mixed-effects model
-\end{IEEEkeywords}
+\section*{Abstract}
+This study examines Hindi verbal fluency and spatial similarity organization using a Verbal Fluency Task (VFT) and the Spatial Arrangement Method (SpAM). Thirty-five Hindi--English bilingual participants generated category members in four domains (animals, foods, colours, body-parts), yielding 712 valid Hindi/Hinglish responses (mean IRT 6490 ms, Skewness = 2.54). We evaluated semantic clustering, serial position effects, domain differences in productivity and IRT, SpAM alignment with semantic and phonetic embeddings, phonological similarity trends over retrieval order, and whether an integrated VFT+SpAM score outperforms VFT alone. Results show a robust semantic boundary cost (between-cluster IRT $>$ within-cluster IRT; t = 9.30, d = 1.12, p < 0.001) and modest semantic alignment in SpAM (mean ARI = 0.1765), while evidence for phonological effects and domain-level differences is weak. The integrated score does not outperform the VFT-only score. Overall, Hindi lexical retrieval appears structured by semantic neighborhoods with limited phonological facilitation.
 
 \section{Introduction}
-Verbal fluency tasks ask a participant to name as many words as possible from a category in a short time. This type of task is often used to study lexical access, semantic organization, and executive control \cite{vft,brsm-syllabus}. In this project, the response data are in Hindi/Hinglish and they are paired with SpAM coordinates, so the analysis can look at both response speed and spatial organization.
+The Verbal Fluency Task (VFT) requires participants to generate category members (e.g., ``Animals'') within 60 seconds. Responses tend to cluster by semantic subcategory, with pauses when switching between clusters, consistent with the clustering-and-switching model \citep{troyer1997}. Hindi adds three complications to standard VFT analysis: (1) Hindi typing demands inflate IRTs, (2) educated participants code-switch into English mid-trial, and (3) culturally grounded domains such as foods and animals may alter cluster structure. This study examines how Hindi speakers search their mental lexicon using VFT and SpAM, and whether spatial similarity maps align with semantic and phonetic models.
 
-SpAM gives each word a position in a two-dimensional space. Words that are close in meaning should also be close in space \cite{spam}. In this dataset, the four domains are animals, foods, colours, and body-parts. The goal is to see whether the retrieval pattern is simple or whether it changes across domains, positions, and clustering rules.
+\section{Related Work}
+Phonological similarity influences semantic memory retrieval, suggesting that sound structure can bias access to meaning \citep{dautriche2016}. Words that are phonologically similar tend to be semantically related more than expected by chance. The Spatial Arrangement Method efficiently captures human semantic similarity judgments by arranging items based on perceived relatedness \citep{hout2013}.
 
-\section{Data and Background}
-The main file is \path{merged_vft_spam_responses_enriched.csv}. The analysis uses the Hindi/Hinglish subset after a basic reaction-time filter of 60 seconds. The final analytic sample has 723 rows from 35 participants. The low-N colours domain is kept for description, but it is excluded from some inferential tests because it has only 4 participants.
+\section{Hypotheses}
+H1: Between-cluster IRT is greater than within-cluster IRT (semantic boundary cost). \\
+H2: IRT increases with serial position (lexical exhaustion). \\
+H3: Total word count differs across domains. \\
+H4: Mean IRT differs across domains. \\
+H5: SpAM clusters align with semantic embeddings above chance. \\
+H6: SpAM clusters align with phonetic embeddings above chance. \\
+H7: Phonological-over-semantic similarity increases over retrieval order. \\
+H8: Higher phonological similarity predicts higher productivity. \\
+H9: Integrated VFT+SpAM score correlates differently than VFT-only.
 
-\begin{table}[t]
-\centering
-\caption{Dataset summary used in the report}
-\label{tab:data-summary}
-\begin{tabular}{@{}lr@{}}
+\section{Research Questions (RQ1-RQ5)}
+\noindent\textbf{RQ1}: Do semantic categories differ in productivity (words) or retrieval speed (IRT)? (H1, H2, H3, H4)\\
+\textbf{RQ2}: Does participant spatial structure align with semantic or phonetic models? (H5, H6)\\
+\textbf{RQ3}: Does an integrated VFT+SpAM score outperform VFT-only? (H9)\\
+\textbf{RQ4}: Does phonological-over-semantic similarity increase over retrieval order? (H7)\\
+\textbf{RQ5}: Does phonological similarity predict lexical productivity? (H8)
+
+\section{Methodology}
+\subsection{Participants and Design}
+Within-subjects repeated-measures design; each of 35 participants completed all four semantic domains. Variable summary: N = 35; Gender: 32 Male, 3 Female; Age: M = 23.1 yrs, SD = 1.9, range 19--27; Education: M = 16.5 yrs, SD = 1.7, range 14--20; States (India): 14 states; Gujarat (7), MP (6), Bihar (5), ...
+
+\subsection{Stimuli, Apparatus, and Procedure}
+Four domains were chosen to span vocabulary size and structure: Animals (open, large), Foods (open, culturally rich), Colours (closed, ~15 items), Body-parts (semi-closed). Responses were collected via a custom web app logging cumulative timestamps to the nearest 100 ms. Participants typed category members in 60 s per domain (Hindi cue, e.g., ``Jaanwar''), preceded by a 1-minute Furniture warm-up. Domain order was fixed: Animals - Foods - Colours - Body-parts.
+
+\subsection{Processing Pipeline}
+Raw responses.json was processed in five steps: (1) IRT computation (IRT$_i$ = $t_i - t_{i-1}$), where $t_i$ is the cumulative timestamp of the $i$-th response. (2) language tagging. (3) Hindi filter retaining 712 of 1340 tokens (53\%). (4) adaptive cluster scoring - switch when IRT $>$ (mean + 1 SD) per participant. (5) export to \texttt{merged\_vft\_spam\_responses\_enriched.csv}.
+
+\subsection{Dataset Variables}
+\begin{center}
+\begin{tabular}{ll}
 \toprule
-Item & Value \\
+Column & Description \\
 \midrule
-Raw rows in CSV & 1040 \\
-Hindi/Hinglish rows used in analysis & 723 \\
-Participants & 35 \\
-Domains & 4 \\
-Animals responses & 233 \\
-Foods responses & 258 \\
-Colours responses & 41 \\
-Body-parts responses & 191 \\
+subject\_id & Anonymised participant identifier \\
+process\_id & SpAM session id (where available) \\
+domain & Animals / Foods / Colours / Body-parts \\
+word & Word as typed (original script) \\
+rt\_ms & Inter-response time (ms) \\
+position & Serial position within trial (1 = first word) \\
+language\_type & Hindi/Hinglish or English \\
 \bottomrule
 \end{tabular}
+\end{center}
+Derived per participant: within-cluster IRT (mean IRT where is\_switch = False), between-cluster IRT (mean IRT where is\_switch = True), mean cluster size (mean words per cluster), and total fluency score (count of Hindi tokens).
+
+\subsection{Models and Statistical Tests}
+Semantic patterns were modeled using the multilingual sentence-transformer \texttt{google/muril-base-cased} on original words \citep{kumar2022}. Phonetic patterns were modeled by transliterating words into phonetic keys and embedding them in the same space. SpAM cluster layouts were compared with semantic and phonetic cluster structures using ARI and NMI.
+
+We used Welch's t-test (H1), linear mixed-effects models per domain (H2: IRT $\sim$ position + (1 + position $|$ subject)), Kruskal--Wallis tests (H3, H4), binomial sign tests and permutation tests for ARI (H5, H6), a mixed-effects model for similarity type by position (H7: similarity $\sim$ type * position + (1 + position $|$ subject)), Spearman correlation (H8), and Steiger's Z for dependent correlations (H9).
+
+\section{Hypothesis Test Summary (H1--H9)}
+\begin{table}[htbp]
+\centering\small
+\caption{Consolidated hypothesis outcome summary across all nine hypotheses.}
+\label{tab:summary}
+\begin{tabular}{p{0.6cm}p{4.5cm}p{4cm}p{1.5cm}p{2cm}}
+\toprule
+Hyp. & Prediction & Key Result & Signif. & Decision \\\midrule
+H1 & Between\,$>$\,within IRT & $t$\,=\,9.30, $d$\,=\,1.12 & $p<$0.001 & \textbf{Supported} \\
+H2 & Positive serial slowing & No positive slope (0/4) & $p>$0.05 & Not supported \\
+H3 & Domain effect on words & $H$\,=\,3.264 & $p$\,=\,.196 & Not supported \\
+H4 & Domain effect on IRT & $H$\,=\,3.903 & $p$\,=\,.142 & Not supported \\
+H5 & Semantic ARI\,$>$\,0 & 68/86 pos.; ARI\,=\,0.177 & sign$<$.001 & Mixed \\
+H6 & Phonetic ARI\,$>$\,0 & 52/86 pos.; ARI\,=\,0.075 & sign\,=\,.066 & Not supported \\
+H7 & Phon-over-sem increases & $\beta$\,=\,+0.003 & $p$\,=\,.091 & Not supported \\
+H8 & Phon.\ sim.\,$\to$\,WC & $\rho$\,=\,+0.114 & $p$\,=\,.257 & Not supported \\
+H9 & Integrated vs VFT-only & Steiger $z$\,=\,0.000 & $p$\,=\,1.000 & Not supported \\\bottomrule
+\end{tabular}
 \end{table}
-
-The BRSM syllabus for the course also matches this kind of work well, because it focuses on descriptive statistics, hypothesis testing, ANOVA, correlation, regression, and multivariate methods \cite{brsm-syllabus}. That is why the report follows a standard statistics structure: first description, then method, then tests, then conclusion.
-
-\section{Methods}
-\subsection{Preprocessing}
-The notebook loads the enriched CSV, checks the required columns, and keeps rows with \texttt{rt\_ms <= 60000}. It then splits the data into Hindi/Hinglish and English rows. The Hindi/Hinglish part is the main sample for this report.
-
-The analysis uses response time in milliseconds (IRT), word position, subject ID, domain, SpAM coordinates \texttt{x} and \texttt{y}, and the confidence variable \texttt{hi\_confidence}. For the semantic work, the notebook also uses multilingual sentence embeddings from \texttt{paraphrase-multilingual-MiniLM-L12-v2} \cite{transformers}.
-
-\subsection{Descriptive analysis}
-First, the report checks the overall shape of IRT values with histogram, KDE, and boxplots. It also calculates mean, median, skewness, and Shapiro-Wilk diagnostics by domain. This gives the basic distribution picture before any hypothesis test.
-
-\subsection{Cluster and position analysis}
-For the semantic clustering hypothesis, the notebook builds a simple cluster rule using an adaptive threshold of mean IRT plus one standard deviation within each subject-domain sequence. It then compares within-cluster IRT and between-cluster IRT with a Welch t-test and Cohen's d.
-
-For the lexical exhaustion test, the notebook fits mixed-effects models of the form \(\text{rt\_ms} \sim \text{position}\) with subject-level random effects. This is used to check whether later positions become slower.
-
-\subsection{Domain tests}
-Domain differences in productivity are tested with Kruskal-Wallis on participant-level word counts. Domain differences in IRT are also tested with Kruskal-Wallis on response-level IRTs. Pairwise Mann-Whitney U tests are used as follow-up checks when needed \cite{kruskal}.
-
-\subsection{SpAM, clustering, and composite score}
-For the SpAM part, the notebook compares semantic and phonological structure with adjusted rand index (ARI), sign tests, and a permutation-style check. HDBSCAN was not available in the environment, so agglomerative clustering was used as a fallback for one of the clustering comparisons.
-
-The later analysis checks whether SpAM and semantic distances move together, whether neighbourhood density predicts retrieval speed, and whether phonological similarity grows later in the retrieval order. Finally, the notebook builds a composite fluency score from total words, speed, spatial compactness, semantic alignment, and phonological alignment, then compares it with a VFT-only score.
 
 \section{Results}
-\subsection{Overall pattern}
-The IRT distribution is clearly right-skewed. The histogram has a long tail, so the mean is above the median. The boxplot also shows large spread across the four domains. This is normal for fluency data, where some words come quickly and some words take much longer.
+\subsection{H1: Semantic Clustering (Between vs Within IRT)}
+Between-cluster pauses are higher than within-cluster pauses, supporting structured retrieval and a strong semantic boundary cost. The effect size is large (d = 1.12), indicating that semantic boundaries produce meaningful slowdowns rather than marginal timing differences.
 
-\begin{figure*}[t]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.98\textwidth]{fig_phase2_irt_distribution.png}
-\caption{Overall IRT distribution with KDE and domain overlays. The distribution is right-skewed and has a long tail.}
-\label{fig:irt-dist}
-\end{figure*}
+\includegraphics[width=0.85\linewidth]{fig_moduleA_h1_cluster_comparison.png}
+\caption{Between-cluster IRT $>$ within-cluster IRT (plot).}
+\end{figure}
 
-\begin{figure*}[t]
+\subsection{H2: Lexical Exhaustion (Serial Position)}
+No positive slope was detected across domains. Linear mixed-effects models do not support a consistent serial slowing effect, suggesting that participants do not uniformly slow down as retrieval progresses.
+
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{fig_phase2_irt_boxplot.png}
-\caption{IRT by domain. Colours is the smallest group and is mainly used for description, not for the main inferential tests.}
-\label{fig:irt-box}
-\end{figure*}
+\includegraphics[width=0.85\linewidth]{fig_moduleA_h2_serial_position_lme.png}
+\caption{Serial position effect by domain (LME).}
+\end{figure}
 
-\subsection{Within-cluster vs between-cluster retrieval}
-H1 is supported. Between-cluster retrieval is much slower than within-cluster retrieval. Overall, within-cluster IRT is 5841.9 ms and between-cluster IRT is 10960.3 ms. The Welch test gives \(t = 9.2995\), one-tailed \(p < 0.001\), and Cohen's \(d = 1.1206\). This is a large effect.
+\subsection{H3 and H4: Domain Differences}
+Domain-level differences in word output and retrieval time are not statistically significant in this sample, indicating that domain choice does not reliably alter productivity or mean IRT under the current data constraints.
 
-The same pattern appears in every domain. Animals, foods, colours, and body-parts all show faster within-cluster retrieval than between-cluster retrieval.
-
-\begin{figure*}[t]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{fig_moduleA_h1_cluster_comparison.png}
-\caption{Within-cluster and between-cluster IRT comparison for H1. The between-cluster side is consistently slower.}
-\label{fig:h1}
-\end{figure*}
+\includegraphics[width=0.49\linewidth]{vft_wordcount_by_domain.png}
+\includegraphics[width=0.49\linewidth]{vft_rt_by_domain.png}
+\caption{Domain differences in productivity (left) and retrieval speed (right).}
+\end{figure}
 
-\begin{figure*}[t]
+\subsection{H5 and H6: SpAM Alignment With Semantic and Phonetic Structure}
+Semantic ARI tends to be above phonetic ARI, but the effect is modest. The sign test suggests a positive semantic signal, while permutation results indicate that the effect is not robust against chance alignment. Phonetic alignment remains weak and statistically unsupported.
+
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{fig_moduleA_h2_serial_position_lme.png}
-\caption{Serial position mixed-effects models for H2. The slopes do not show a stable lexical-exhaustion pattern.}
-\label{fig:h2}
-\end{figure*}
+\includegraphics[width=0.85\linewidth]{fig_moduleD_h5_h6_alignment.png}
+\caption{Cluster alignment: semantic vs phonetic ARI.}
+\end{figure}
 
-\subsection{Serial position and lexical exhaustion}
-H2 is not supported. The slope is mixed by domain. Foods and body-parts have negative slopes, animals is also negative but weaker, and colours is positive but not significant. The model support count is 0 out of 4 domains. So there is no clear and stable lexical-exhaustion pattern in this sample.
+\subsection{H7: Semantic vs Phonological Similarity Over Retrieval Order}
+No reliable phonological facilitation trend is observed over retrieval order. The interaction term is positive but non-significant (beta = 0.003127, p = 0.0905), indicating only weak evidence for increasing phonological dominance.
 
-\subsection{Domain differences in productivity and speed}
-The domain-level Kruskal-Wallis tests are not significant. For productivity, \(H = 3.2639\), \(p = 0.1956\). For IRT, \(H = 3.9028\), \(p = 0.1421\). This means that, once the low-N rule is applied, the three inferential domains do not separate strongly on these two measures.
-
-\begin{table*}[t]
+\begin{figure}[H]
 \centering
-\caption{Key hypothesis results from the notebook}
-\label{tab:hypotheses}
-\scriptsize
-\begin{tabular}{@{}p{0.08\textwidth}p{0.30\textwidth}p{0.18\textwidth}p{0.12\textwidth}p{0.25\textwidth}@{}}
-\toprule
-Hyp. & Main statistic & p-value & Decision & Short reading \\
-\midrule
-H1 & Welch \(t = 9.2995\), \(d = 1.1206\) & \(< 0.001\) & Supported & Between-cluster IRT is much slower. \\
-H2 & Mixed-effects slope on position & Mixed & Not supported & No stable lexical-exhaustion trend. \\
-H3 & Kruskal-Wallis \(H = 3.2639\) & 0.1956 & Not supported & Productivity is similar across inferential domains. \\
-H4 & Kruskal-Wallis \(H = 3.9028\) & 0.1421 & Not supported & IRT is similar across inferential domains. \\
-H5 & Mean ARI = 0.1765; sign test positive & \(< 0.001\) & Partly supported & Semantic-SpAM alignment is clearly positive. \\
-H6 & Mean ARI = 0.0745 & 0.0662 & Not supported & Phonetic-SpAM alignment is weak. \\
-H7 & Interaction \(\beta = -0.004144\) & 0.1028 & Not supported & No later phonological gain. \\
-H8 & Spearman \(\rho = 0.114\) & 0.2570 & Not supported & Neighbourhood density does not predict speed. \\
-H9 & \(\rho = -0.461\) for both scores; Steiger \(p = 1.000\) & 1.0000 & Not supported & Integrated score does not beat VFT-only. \\
-\bottomrule
-\end{tabular}
-\end{table*}
+\includegraphics[width=0.85\linewidth]{graph_12_1_h7_dual_similarity.png}
+\caption{Semantic vs phonological similarity across retrieval order.}
+\end{figure}
 
-\subsection{Semantic and SpAM structure}
-H5 gives a positive semantic-SpAM result. The average ARI is 0.1765 and the sign test is significant. The permutation estimate is 0.5022, so this effect is not very strong under the more conservative check, but the direction is still positive.
-
-H6 is weaker. The average phonetic-SpAM ARI is 0.0745 and the sign test is not significant at 0.05. So phonological alignment is much less stable than semantic alignment.
-
-At the word level, SpAM-FastText alignment is domain-specific. Colours shows a small positive correlation \((\rho = 0.139, p = 0.0093)\), while animals, foods, and body-parts do not show the same clear pattern. This means that semantic structure exists, but it is not equally strong in every category.
-
-\begin{figure*}[t]
+\subsection{H8: Phonological Similarity and Productivity}
+Higher phonological similarity did not predict higher productivity (Spearman rho = 0.114, p(one) = 0.257). The effect is small and inconsistent with a strong facilitation account.
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\textwidth]{fig_moduleD_h5_h6_alignment.png}
-\caption{H5 and H6 alignment metrics. Semantic alignment is stronger than phonetic alignment.}
-\label{fig:h5h6}
-\end{figure*}
+\includegraphics[width=\linewidth]{graph_10_2_neighbourhood_vs_irt.png}
+\caption{Phonological neighbourhood density vs IRT.}
+\end{figure}
 
-\subsection{Phonological and neighbourhood effects}
-H7 is not supported. The interaction between similarity type and position is negative and not significant \((\beta = -0.004144, p = 0.1028)\). The semantic slope and phonological slope are both small and not significant.
+\textbf{Interpretation}: Semantic neighbourhood density does not predict retrieval latency. IRT is governed by \textit{active clustering strategy} (H1) rather than passive neighbourhood geometry. This reinforces that bilingual retrieval dynamics differ from monolingual phonological neighbourhood effects \citep{dautriche2016}.
 
-H8 is also not supported. Neighbourhood density has only a weak relationship with retrieval speed \((\rho = 0.114, p = 0.2570)\). The data do not show a reliable speed benefit from denser neighbourhood structure.
 
-\begin{figure*}[t]
+\subsection{H9: Integrated VFT + SpAM vs VFT-Only}
+The combined VFT+SpAM score does not outperform the VFT-only score; the two correlations are identical (Steiger z = 0.000). This indicates that SpAM contributes limited incremental predictive value for confidence in this dataset.
+
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{graph_12_1_h7_dual_similarity.png}
-\caption{H7 dual-similarity check. Phonological similarity does not overtake semantic similarity in a reliable way.}
-\label{fig:h7}
-\end{figure*}
+\includegraphics[width=0.85\linewidth]{vft_vs_integrated_score.png}
+\caption{Integrated score vs VFT-only correlation with confidence.}
+\end{figure}
 
-\subsection{Composite fluency score}
-H9 does not show an advantage for the integrated score. The integrated score and the VFT-only score have the same Spearman correlation with Hindi confidence \((\rho = -0.461, p = 0.0053)\). The Steiger test gives \(p = 1.000\), so there is no significant difference between them. In simple terms, the extra SpAM-based features do not improve this confidence link in the current sample.
+\section{Discussion}
+The strongest evidence supports semantic clustering: within-cluster IRTs are shorter than between-cluster IRTs, indicating a clear boundary cost in Hindi retrieval. SpAM layouts align weakly with semantic embeddings, suggesting partial semantic structure in spatial similarity judgments. In contrast, phonological effects are weak or inconsistent across tests, and domain-level differences in productivity and IRT do not reach statistical significance. The integrated VFT+SpAM score does not improve over VFT-only, indicating that SpAM contributes limited incremental predictive value in this sample.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.95\textwidth]{graph_13_1_composite_vs_vft_confidence.png}
-\caption{Composite score versus Hindi confidence. The integrated score does not outperform the VFT-only score.}
-\label{fig:h9}
-\end{figure*}
-
-\subsection{Clustering agreement}
-The clustering methods agree quite well in most domains. K-means vs agglomerative ARI is 0.905 for animals, 0.861 for foods, 0.714 for colours, and 0.461 for body-parts. This suggests that the main semantic structure is not an accident of one single clustering method. The body-parts domain is the weakest one.
-
-\begin{table}[t]
-\centering
-\caption{SpAM and semantic structure by domain}
-\label{tab:domain-structure}
-\begin{tabular}{@{}lrrr@{}}
-\toprule
-Domain & KM-AG ARI & SpAM-FastText $\rho$ & Reading \\
-\midrule
-Animals & 0.905 & -0.070 & Weak alignment \\
-Foods & 0.861 & -0.036 & Weak alignment \\
-Colours & 0.714 & 0.139 & Best alignment \\
-Body-parts & 0.461 & -0.033 & Weak alignment \\
-\bottomrule
-\end{tabular}
-\end{table}
+\section{Limitations}
+The dataset is small and includes substantial English code-switching, which reduces the effective Hindi sample. The colours domain is underrepresented, limiting statistical power and generalizability for domain comparisons.
 
 \section{Conclusion}
-The report shows that Hindi/Hinglish fluency is not random. The strongest result is the big gap between within-cluster and between-cluster retrieval. Semantic structure is also visible in the clustering and SpAM work, but the effect is not equally strong in every domain. On the other hand, serial-position exhaustion, domain differences in productivity, neighbourhood-density speed effects, and the composite-score improvement are not stable in this sample.
+Hindi lexical retrieval is organized primarily by semantic neighborhoods rather than random retrieval. SpAM captures modest semantic structure, while phonological organization is not strongly supported. These findings are consistent with clustering-and-switching models and highlight semantic boundaries as the dominant constraint in Hindi verbal fluency.
 
-For the next step, I would improve the dataset with a larger colours sample, add a cleaner manual coding pass for semantic clusters, and compare the current notebook results with a human-rated poster version. I would also replace the placeholder citations with the final bibliography.
+\section{Contributions}
+Hypothesis-based split: H1, H4, H7 (Akshat) | H2, H5, H8 (Om) | H3, H6, H9 (Ankit). Each member contributed to analysis and writing using shared frameworks (permutation tests, clustering) with weekly integration checkpoints.
 
-\begin{thebibliography}{99}
-\bibitem{brsm-syllabus}
-BRSM course syllabus and topic summary, project handout used for this report. Placeholder entry to be replaced with the final course reference.
+\section*{Code and Data Availability}
+All analysis code, raw data, and figures are openly available in the project GitHub repository: \url{https://github.com/omii2403/Hindi-Fluency}. The repository contains: responses.json (raw session data), \texttt{merged\_vft\_spam\_responses\_enriched.csv} (processed dataset),
+\texttt{Hindi\_fluency\_final.ipynb} (all analyses and figures), and this report source (Report\_Final.tex).
 
-\bibitem{vft}
-General background on verbal fluency tasks and lexical retrieval. Placeholder entry to be replaced with the final source.
 
-\bibitem{spam}
-General background on the Spatial Arrangement Method (SpAM). Placeholder entry to be replaced with the final source.
+\bibliographystyle{plainnat}
+\bibliography{references}
 
-\bibitem{transformers}
-General background on multilingual sentence-transformer embeddings used for semantic analysis. Placeholder entry to be replaced with the final source.
-
-\bibitem{mixed-effects}
-General background on mixed-effects models for repeated-measures data. Placeholder entry to be replaced with the final source.
-
-\bibitem{kruskal}
-General background on Kruskal-Wallis and Mann-Whitney U tests for nonparametric comparisons. Placeholder entry to be replaced with the final source.
-\end{thebibliography}
+% Acknowledgments removed per request
 
 \end{document}
