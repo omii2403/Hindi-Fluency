@@ -21,7 +21,7 @@
 \maketitle
 
 \section*{Abstract}
-This study examines Hindi verbal fluency and spatial similarity organization using a Verbal Fluency Task (VFT) and the Spatial Arrangement Method (SpAM). Thirty-five Hindi--English bilingual participants generated category members in four domains (animals, foods, colours, body-parts), yielding 712 valid Hindi/Hinglish responses (mean IRT 6490 ms, Skewness = 2.54). We evaluated semantic clustering, serial position effects, domain differences in productivity and IRT, SpAM alignment with semantic and phonetic embeddings, phonological similarity trends over retrieval order, and whether an integrated VFT+SpAM score outperforms VFT alone. Results show a robust semantic boundary cost (between-cluster IRT $>$ within-cluster IRT; t = 9.30, d = 1.12, p < 0.001) and modest semantic alignment in SpAM (mean ARI = 0.1765), while evidence for phonological effects and domain-level differences is weak. The integrated score does not outperform the VFT-only score. Overall, Hindi lexical retrieval appears structured by semantic neighborhoods with limited phonological facilitation.
+This study examines Hindi verbal fluency and spatial similarity organization using a Verbal Fluency Task (VFT) and the Spatial Arrangement Method (SpAM). Thirty-five Hindi--English bilingual participants generated category members in four domains (animals, foods, colours, body-parts), yielding 712 valid Hindi/Hinglish responses (mean IRT 6490 ms, Skewness = 2.54). We evaluated semantic clustering, serial position effects, domain differences in productivity and IRT, SpAM alignment with semantic and phonetic embeddings, phonological similarity trends over retrieval order, and whether an integrated VFT+SpAM score outperforms VFT alone. Results show a robust semantic boundary cost (between-cluster IRT $>$ within-cluster IRT; t = 9.30, d = 1.12, p $< 0.001$) and modest semantic alignment in SpAM (mean ARI = 0.1765), while evidence for phonological effects and domain-level differences is weak. The integrated score does not outperform the VFT-only score. Overall, Hindi lexical retrieval appears structured by semantic neighborhoods with limited phonological facilitation.
 
 \section{Introduction}
 The Verbal Fluency Task (VFT) requires participants to generate category members (e.g., ``Animals'') within 60 seconds. Responses tend to cluster by semantic subcategory, with pauses when switching between clusters, consistent with the clustering-and-switching model \citep{troyer1997}. Hindi adds three complications to standard VFT analysis: (1) Hindi typing demands inflate IRTs, (2) educated participants code-switch into English mid-trial, and (3) culturally grounded domains such as foods and animals may alter cluster structure. This study examines how Hindi speakers search their mental lexicon using VFT and SpAM, and whether spatial similarity maps align with semantic and phonetic models.
@@ -78,7 +78,7 @@ Derived per participant: within-cluster IRT (mean IRT where is\_switch = False),
 \subsection{Models and Statistical Tests}
 Semantic patterns were modeled using the multilingual sentence-transformer \texttt{google/muril-base-cased} on original words \citep{kumar2022}. Phonetic patterns were modeled by transliterating words into phonetic keys and embedding them in the same space. SpAM cluster layouts were compared with semantic and phonetic cluster structures using ARI and NMI.
 
-We used Welch's t-test (H1), linear mixed-effects models per domain (H2: IRT $\sim$ position + (1 + position $|$ subject)), Kruskal--Wallis tests (H3, H4), binomial sign tests and permutation tests for ARI (H5, H6), a mixed-effects model for similarity type by position (H7: similarity $\sim$ type * position + (1 + position $|$ subject)), Spearman correlation (H8), and Steiger's Z for dependent correlations (H9).
+We used Welch's t-test (H1), linear mixed-effects models per domain (H2: IRT $\sim$ position + (1 + position $|$ subject)), Shapiro--Wilk normality checks for domain-level IRT and word counts, Kruskal--Wallis tests (H3, H4), binomial sign tests and permutation tests for ARI (H5, H6), a mixed-effects model for similarity type by position (H7: similarity $\sim$ type * position + (1 + position $|$ subject)), Spearman correlation (H8), and Steiger's Z for dependent correlations (H9).
 
 \section{Hypothesis Test Summary (H1--H9)}
 \begin{table}[htbp]
@@ -171,16 +171,6 @@ The combined VFT+SpAM score does not outperform the VFT-only score; the two corr
 
 \section{Semantic Embedding and Independent Clustering (H9b)}
 
-
-\subsection{Inter-Method Agreement }
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.70\linewidth]{Final Image/graph_9_5_method_agreement.png}
-\caption{\textbf{Cluster Robustness: Inter-Method ARI Heatmap  and HDBSCAN Noise Rate.} \textit{Left}: Animals and foods show very strong agreement across methods, while body-parts shows moderate agreement. \textit{Right}: HDBSCAN assigns all points to clusters (0\% noise).}
-\label{fig:h9b_agree}
-\end{figure}
-
-
 \subsection{Pairwise Similarity Structure}
 
 \begin{figure}[H]
@@ -223,8 +213,9 @@ Hindi lexical retrieval is organized primarily by semantic neighborhoods rather 
 Hypothesis-based split: H1, H4, H7 (Akshat) | H2, H5, H8 (Om) | H3, H6, H9 (Ankit). Each member contributed to analysis and writing using shared frameworks (permutation tests, clustering) with weekly integration checkpoints.
 
 \section*{Code and Data Availability}
-All analysis code, raw data, and figures are openly available in the project GitHub repository: \url{https://github.com/omii2403/Hindi-Fluency}. The repository contains: responses.json (raw session data), \texttt{merged\_vft\_spam\_responses\_enriched.csv} (processed dataset),
-\texttt{Hindi\_fluency\_final.ipynb} (all analyses and figures), and this report source (Report\_Final.tex).
+All analysis code, raw data, and figures are openly available in the project GitHub repository: \url{https://github.com/omii2403/Hindi-Fluency}. The repository contains: responses.json (raw session data), \texttt{merged\_vft\_spam\_responses\_enriched.csv} (processed dataset), 
+
+\texttt{Hindi\_fluency\_final.ipynb} (all analyses and figures) and this report.
 
 
 \bibliographystyle{plainnat}
