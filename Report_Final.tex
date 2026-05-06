@@ -14,9 +14,8 @@
 \setlength{\parskip}{0.6em}
 \graphicspath{{images/}{images/img/}}
 
-\title{Hindi Verbal Fluency: VFT and SpAM Analysis of Mental Lexicon Structure}
-\author{Akshat Kotadia (2025201005) \and Om Mehra (2025201008) \and Ankit Chavda (2025201045)}
-\date{BRSM 2026}
+\title{\textbf{Hindi Verbal Fluency: VFT and SpAM Analysis of Mental Lexicon Structure}}\author{Akshat Kotadia (2025201005) \and Om Mehra (2025201008) \and Ankit Chavda (2025201045)}
+\date{Report-2}
 
 \begin{document}
 \maketitle
@@ -105,18 +104,18 @@ H9 & Integrated vs VFT-only & Steiger $z$\,=\,0.000 & $p$\,=\,1.000 & Not suppor
 \subsection{H1: Semantic Clustering (Between vs Within IRT)}
 Between-cluster pauses are higher than within-cluster pauses, supporting structured retrieval and a strong semantic boundary cost. The effect size is large (d = 1.12), indicating that semantic boundaries produce meaningful slowdowns rather than marginal timing differences.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.85\linewidth]{fig_moduleA_h1_cluster_comparison.png}
-\caption{Between-cluster IRT $>$ within-cluster IRT (plot).}
-\end{figure}
-
 \subsection{H2: Lexical Exhaustion (Serial Position)}
 No positive slope was detected across domains. Linear mixed-effects models do not support a consistent serial slowing effect, suggesting that participants do not uniformly slow down as retrieval progresses.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{fig_moduleA_h2_serial_position_lme.png}
+\includegraphics[width=0.85\linewidth]{Final Image/fig_moduleA_h1_cluster_comparison.png}
+\caption{Between-cluster IRT $>$ within-cluster IRT (plot).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Final Image/fig_moduleA_h2_serial_position_lme.png}
 \caption{Serial position effect by domain (LME).}
 \end{figure}
 
@@ -125,8 +124,8 @@ Domain-level differences in word output and retrieval time are not statistically
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.49\linewidth]{vft_wordcount_by_domain.png}
-\includegraphics[width=0.49\linewidth]{vft_rt_by_domain.png}
+\includegraphics[width=0.49\linewidth]{Final Image/vft_wordcount_by_domain.png}
+\includegraphics[width=0.49\linewidth]{Final Image/vft_rt_by_domain.png}
 \caption{Domain differences in productivity (left) and retrieval speed (right).}
 \end{figure}
 
@@ -135,7 +134,7 @@ Semantic ARI tends to be above phonetic ARI, but the effect is modest. The sign 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{fig_moduleD_h5_h6_alignment.png}
+\includegraphics[width=0.75\linewidth]{Final Image/fig_moduleD_h5_h6_alignment.png}
 \caption{Cluster alignment: semantic vs phonetic ARI.}
 \end{figure}
 
@@ -144,7 +143,7 @@ No reliable phonological facilitation trend is observed over retrieval order. Th
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{graph_12_1_h7_dual_similarity.png}
+\includegraphics[width=0.75\linewidth]{Final Image/graph_12_1_h7_dual_similarity.png}
 \caption{Semantic vs phonological similarity across retrieval order.}
 \end{figure}
 
@@ -152,21 +151,64 @@ No reliable phonological facilitation trend is observed over retrieval order. Th
 Higher phonological similarity did not predict higher productivity (Spearman rho = 0.114, p(one) = 0.257). The effect is small and inconsistent with a strong facilitation account.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{graph_10_2_neighbourhood_vs_irt.png}
-\caption{Phonological neighbourhood density vs IRT.}
+\includegraphics[width=\linewidth]{Final Image/graph_10_2_neighbourhood_vs_irt.png}
+\caption{Phonological neighbourhood density vs IRT. [left : RQ2 FastText | rho = 0.101, p=0.5880 , right :  SpAM | rho = 0.321, p=0.0779]}
 \end{figure}
 
 \textbf{Interpretation}: Semantic neighbourhood density does not predict retrieval latency. IRT is governed by \textit{active clustering strategy} (H1) rather than passive neighbourhood geometry. This reinforces that bilingual retrieval dynamics differ from monolingual phonological neighbourhood effects \citep{dautriche2016}.
 
 
+
+
 \subsection{H9: Integrated VFT + SpAM vs VFT-Only}
-The combined VFT+SpAM score does not outperform the VFT-only score; the two correlations are identical (Steiger z = 0.000). This indicates that SpAM contributes limited incremental predictive value for confidence in this dataset.
+The combined VFT+SpAM score does not outperform the VFT-only score; the two correlations are identical. This indicates that SpAM contributes limited incremental predictive value for confidence in this dataset.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{vft_vs_integrated_score.png}
+\includegraphics[width=0.70\linewidth]{Final Image/vft_vs_integrated_score.png}
 \caption{Integrated score vs VFT-only correlation with confidence.}
 \end{figure}
+
+\section{Semantic Embedding and Independent Clustering (H9b)}
+
+
+\subsection{Inter-Method Agreement }
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\linewidth]{Final Image/graph_9_5_method_agreement.png}
+\caption{\textbf{Cluster Robustness: Inter-Method ARI Heatmap  and HDBSCAN Noise Rate.} \textit{Left}: Animals and foods show very strong agreement across methods, while body-parts shows moderate agreement. \textit{Right}: HDBSCAN assigns all points to clusters (0\% noise).}
+\label{fig:h9b_agree}
+\end{figure}
+
+
+\subsection{Pairwise Similarity Structure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1 \linewidth]{Final Image/graph_9_1_heatmaps.png}
+\caption{\textbf{Pairwise Cosine Distance Heatmaps - Top-25 Most Frequent Words per Domain.} \\  Green\,=\,similar (low cosine distance); red\,=\,dissimilar. Ward-sorted to reveal block structure. \textit{Animals}: clear domestic vs.\ wild/exotic block separation. \textit{Foods}: multiple overlapping blocks (grains, lentils, snacks, fruits). \textit{Colours}: tight global similarity with isolated script-variant clusters. \textit{Body-parts}: 2--3 blocks (head/sensory, extremities, internal organs).}
+\label{fig:heatmaps}
+\end{figure}
+
+\subsection{K-Means Clustering with Systematic $k$ Selection}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{Final Image/graph_9_2_kmeans_selection.png}
+\caption{\textbf{K-Means $k$-Selection: Elbow (top) and Silhouette (bottom) by Domain.} Red dot marks optimal $k$. Animals, foods, body-parts converge on $k$\,=\,2 (silhouettes: 0.218, 0.298, 0.174). Colours requires $k$\,=\,8 (silhouette\,=\,0.215), reflecting fine-grained chromatic distinctions in its 27-word vocabulary. Elbow plots confirm diminishing inertia returns beyond optimal $k$.}
+\label{fig:kmeans_sel}
+\end{figure}
+
+
+\subsection{SpAM--Semantic Permutation Test}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\linewidth]{Final Image/graph_9_6_permutation_test.png}
+\caption{\textbf{Permutation Test for SpAM--Semantic Cluster Alignment.} \\ \\ \textit{Left}: Observed ARI (teal) vs.\ null from 500 shuffles (grey). Global mean observed ARI (0.089) exceeds null ($\approx$\,0.000). \textit{Right}: Per-domain observed vs.\ null ARI. Body-parts shows the largest above-null gap (0.212 vs.\ null $\approx$\,0), consistent with its clear anatomical hierarchy. Animals shows near-null observed ARI, suggesting high idiosyncrasy in animal word spatial organisation. High between-participant variance ($p$\,=\,.874 sign test) explains the discrepancy with the significant H5 sign test result.}
+\label{fig:perm}
+\end{figure}
+
+
 
 \section{Discussion}
 The strongest evidence supports semantic clustering: within-cluster IRTs are shorter than between-cluster IRTs, indicating a clear boundary cost in Hindi retrieval. SpAM layouts align weakly with semantic embeddings, suggesting partial semantic structure in spatial similarity judgments. In contrast, phonological effects are weak or inconsistent across tests, and domain-level differences in productivity and IRT do not reach statistical significance. The integrated VFT+SpAM score does not improve over VFT-only, indicating that SpAM contributes limited incremental predictive value in this sample.
