@@ -109,13 +109,13 @@ No positive slope was detected across domains. Linear mixed-effects models do no
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{Final Image/fig_moduleA_h1_cluster_comparison.png}
+\includegraphics[width=0.85\linewidth]{Final_Image/fig_moduleA_h1_cluster_comparison.png}
 \caption{Between-cluster IRT $>$ within-cluster IRT (plot).}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{Final Image/fig_moduleA_h2_serial_position_lme.png}
+\includegraphics[width=0.85\linewidth]{Final_Image/fig_moduleA_h2_serial_position_lme.png}
 \caption{Serial position effect by domain (LME).}
 \end{figure}
 
@@ -124,8 +124,8 @@ Domain-level differences in word output and retrieval time are not statistically
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.49\linewidth]{Final Image/vft_wordcount_by_domain.png}
-\includegraphics[width=0.49\linewidth]{Final Image/vft_rt_by_domain.png}
+\includegraphics[width=0.49\linewidth]{Final_Image/vft_wordcount_by_domain.png}
+\includegraphics[width=0.49\linewidth]{Final_Image/vft_rt_by_domain.png}
 \caption{Domain differences in productivity (left) and retrieval speed (right).}
 \end{figure}
 
@@ -134,7 +134,7 @@ Semantic ARI tends to be above phonetic ARI, but the effect is modest. The sign 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\linewidth]{Final Image/fig_moduleD_h5_h6_alignment.png}
+\includegraphics[width=0.75\linewidth]{Final_Image/fig_moduleD_h5_h6_alignment.png}
 \caption{Cluster alignment: semantic vs phonetic ARI.}
 \end{figure}
 
@@ -143,7 +143,7 @@ No reliable phonological facilitation trend is observed over retrieval order. Th
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\linewidth]{Final Image/graph_12_1_h7_dual_similarity.png}
+\includegraphics[width=0.75\linewidth]{Final_Image/graph_12_1_h7_dual_similarity.png}
 \caption{Semantic vs phonological similarity across retrieval order.}
 \end{figure}
 
@@ -151,7 +151,7 @@ No reliable phonological facilitation trend is observed over retrieval order. Th
 Higher phonological similarity did not predict higher productivity (Spearman rho = 0.114, p(one) = 0.257). The effect is small and inconsistent with a strong facilitation account.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Final Image/graph_10_2_neighbourhood_vs_irt.png}
+\includegraphics[width=\linewidth]{Final_Image/graph_10_2_neighbourhood_vs_irt.png}
 \caption{Phonological neighbourhood density vs IRT. [left : RQ2 FastText | rho = 0.101, p=0.5880 , right :  SpAM | rho = 0.321, p=0.0779]}
 \end{figure}
 
@@ -165,7 +165,7 @@ The combined VFT+SpAM score does not outperform the VFT-only score; the two corr
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.70\linewidth]{Final Image/vft_vs_integrated_score.png}
+\includegraphics[width=0.70\linewidth]{Final_Image/vft_vs_integrated_score.png}
 \caption{Integrated score vs VFT-only correlation with confidence.}
 \end{figure}
 
@@ -175,7 +175,7 @@ The combined VFT+SpAM score does not outperform the VFT-only score; the two corr
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.1 \linewidth]{Final Image/graph_9_1_heatmaps.png}
+\includegraphics[width=1.1 \linewidth]{Final_Image/graph_9_1_heatmaps.png}
 \caption{\textbf{Pairwise Cosine Distance Heatmaps - Top-25 Most Frequent Words per Domain.} \\  Green\,=\,similar (low cosine distance); red\,=\,dissimilar. Ward-sorted to reveal block structure. \textit{Animals}: clear domestic vs.\ wild/exotic block separation. \textit{Foods}: multiple overlapping blocks (grains, lentils, snacks, fruits). \textit{Colours}: tight global similarity with isolated script-variant clusters. \textit{Body-parts}: 2--3 blocks (head/sensory, extremities, internal organs).}
 \label{fig:heatmaps}
 \end{figure}
@@ -183,7 +183,7 @@ The combined VFT+SpAM score does not outperform the VFT-only score; the two corr
 \subsection{K-Means Clustering with Systematic $k$ Selection}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.90\linewidth]{Final Image/graph_9_2_kmeans_selection.png}
+\includegraphics[width=0.90\linewidth]{Final_Image/graph_9_2_kmeans_selection.png}
 \caption{\textbf{K-Means $k$-Selection: Elbow (top) and Silhouette (bottom) by Domain.} Red dot marks optimal $k$. Animals, foods, body-parts converge on $k$\,=\,2 (silhouettes: 0.218, 0.298, 0.174). Colours requires $k$\,=\,8 (silhouette\,=\,0.215), reflecting fine-grained chromatic distinctions in its 27-word vocabulary. Elbow plots confirm diminishing inertia returns beyond optimal $k$.}
 \label{fig:kmeans_sel}
 \end{figure}
@@ -193,7 +193,7 @@ The combined VFT+SpAM score does not outperform the VFT-only score; the two corr
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.80\linewidth]{Final Image/graph_9_6_permutation_test.png}
+\includegraphics[width=0.80\linewidth]{Final_Image/graph_9_6_permutation_test.png}
 \caption{\textbf{Permutation Test for SpAM--Semantic Cluster Alignment.} \\ \\ \textit{Left}: Observed ARI (teal) vs.\ null from 500 shuffles (grey). Global mean observed ARI (0.089) exceeds null ($\approx$\,0.000). \textit{Right}: Per-domain observed vs.\ null ARI. Body-parts shows the largest above-null gap (0.212 vs.\ null $\approx$\,0), consistent with its clear anatomical hierarchy. Animals shows near-null observed ARI, suggesting high idiosyncrasy in animal word spatial organisation. High between-participant variance ($p$\,=\,.874 sign test) explains the discrepancy with the significant H5 sign test result.}
 \label{fig:perm}
 \end{figure}
